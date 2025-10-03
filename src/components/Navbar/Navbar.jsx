@@ -20,7 +20,7 @@ function Navbar() {
 
   const links = [
     { name: "Home", href: "/" },
-    { name: "AnimeList", href: "/MyAnimeList" },
+    { name: "MyAnimeList", href: "/MyAnimeList" },
     { name: "AnimeFinder", href: "/AnimeFinder" },
     { name: "About", href: "/About" },
   ];

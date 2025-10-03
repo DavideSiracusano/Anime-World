@@ -29,7 +29,7 @@ function CardAnime({ card, addToFavorites, isFavorite }) {
 
       <p className="text-sm text-gray-300 mb-2 text-center">
         {card.synopsis
-          ? card.synopsis.slice(0, 400) + "..."
+          ? card.synopsis.slice(0, 200) + "..."
           : "Descrizione non disponibile"}
       </p>
 
