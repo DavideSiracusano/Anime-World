@@ -37,7 +37,7 @@ function Navbar() {
           <Toolbar className="flex justify-between items-center ">
             {/* Titolo responsive */}
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
-              AnimeWorld
+              My AnimeWorld
             </h1>
 
             {/* Link desktop */}

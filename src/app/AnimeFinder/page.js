@@ -186,7 +186,7 @@ export default function AnimeRecognizer() {
           {results.map((item, idx) => (
             <div
               key={idx}
-              className="border-2 rounded-xl p-5 bg-white shadow-lg hover:shadow-xl transition"
+              className="rounded-xl p-5 bg-gray-400 shadow-lg hover:shadow-xl transition"
             >
               <div className="flex flex-col md:flex-row gap-4">
                 {item.image && (
@@ -197,16 +197,22 @@ export default function AnimeRecognizer() {
                   />
                 )}
                 <div className="flex-1">
-                  <h3 className="font-bold text-xl text-blue-600">
+                  <h3 className="font-bold text-xl text-gray-800">
                     {item.anilistTitle.romaji ||
                       item.anilistTitle.english ||
                       item.anilistTitle.native ||
                       `Titolo sconosciuto (ID: ${item.anilist})`}
                   </h3>
-                  <p>Somiglianza: {(item.similarity * 100).toFixed(1)}%</p>
-                  {item.episode && <p>📺 Episodio: {item.episode}</p>}
+                  <p className="mb-2 text-gray-800">
+                    Somiglianza: {(item.similarity * 100).toFixed(1)}%
+                  </p>
+                  {item.episode && (
+                    <p className="mb-2 text-gray-800">
+                      📺 Episodio: {item.episode}
+                    </p>
+                  )}
                   {item.from !== undefined && (
-                    <p>
+                    <p className="text-gray-800">
                       ⏱️ Timestamp: {formatTime(item.from)} -{" "}
                       {formatTime(item.to)}
                     </p>

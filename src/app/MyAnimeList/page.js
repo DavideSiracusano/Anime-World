@@ -3,8 +3,6 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import CardAnime from "@/components/molecules/CardAnime";
 import SearchAnime from "@/components/organisms/SearchAnime";
-import Skeleton from "@mui/material/Skeleton";
-import Stack from "@mui/material/Stack";
 
 function AnimeList() {
   const router = useRouter();
@@ -70,14 +68,8 @@ function AnimeList() {
 
       {/* Skeleton durante il caricamento */}
       {loading && (
-        <div className="grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 m-5">
-          {Array.from({ length: 8 }).map((_, idx) => (
-            <Stack spacing={1} key={idx} className="p-4 bg-gray-800 rounded-lg">
-              <Skeleton variant="rectangular" width="100%" height={288} />
-              <Skeleton width="80%" />
-              <Skeleton width="60%" />
-            </Stack>
-          ))}
+        <div>
+          <span className="loading loading-spinner text-primary"></span>
         </div>
       )}
 
