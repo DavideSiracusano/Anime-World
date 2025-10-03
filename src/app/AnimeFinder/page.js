@@ -1,6 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import * as React from "react";
+import { styled } from "@mui/material/styles";
+import Button from "@mui/material/Button";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 export default function AnimeRecognizer() {
   const [file, setFile] = useState(null);
@@ -8,6 +12,18 @@ export default function AnimeRecognizer() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const VisuallyHiddenInput = styled("input")({
+    clip: "rect(0 0 0 0)",
+    clipPath: "inset(50%)",
+    height: 1,
+    overflow: "hidden",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    whiteSpace: "nowrap",
+    width: 1,
+  });
 
   // Carica immagine e crea anteprima
   const handleFileChange = (e) => {
@@ -124,12 +140,21 @@ export default function AnimeRecognizer() {
         onSubmit={handleSubmit}
         className="flex flex-col items-center gap-4 w-full max-w-md"
       >
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-          className="w-full border rounded px-3 py-2 cursor-pointer bg-gray-700 text-white"
-        />
+        <Button
+          component="label"
+          role={undefined}
+          variant="contained"
+          tabIndex={-1}
+          startIcon={<CloudUploadIcon />}
+        >
+          Carica qui la tua immagine, otaku!
+          <VisuallyHiddenInput
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            multiple
+          />
+        </Button>
 
         {preview && (
           <img
