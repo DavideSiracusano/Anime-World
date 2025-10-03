@@ -66,6 +66,8 @@ export default function AnimePage() {
           <h1 className="text-3xl font-bold mb-4">
             {anime.title_english || anime.title}
           </h1>
+          <h2 className="text-lg font-semibold mb-2">{`Rank ⭐: ${anime.rank}`}</h2>
+          <h3 className="text-lg font-semibold mb-2">{`Voto: ${anime.score} (votato da ${anime.scored_by} utenti)`}</h3>
           <p className="text-gray-500 mb-4">{anime.synopsis}</p>
 
           {/* Trailer */}

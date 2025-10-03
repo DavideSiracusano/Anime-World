@@ -33,7 +33,7 @@ function Navbar() {
     <>
       {/* Barra superiore */}
       <AppBar position="static">
-        <div className="p-4 sm:p-6 bg-[url('/header.png')] bg-cover bg-[center_25%] bg-blend-darken bg-black/50 w-full">
+        <div className="p-4 sm:p-6 bg-[url('/header.png')] bg-cover bg-[center_25%] bg-blend-darken bg-black/50 w-full shadow-2xl">
           <Toolbar className="flex justify-between items-center ">
             {/* Titolo responsive */}
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
@@ -71,7 +71,7 @@ function Navbar() {
 
       {/* Drawer mobile */}
       <Drawer anchor="left" open={open} onClose={toggleDrawer(false)}>
-        <div className="flex justify-end p-2">
+        <div className="flex justify-end p-2 bg-gray-900">
           <Button
             variant="outlined"
             color="error"
@@ -80,7 +80,7 @@ function Navbar() {
             X
           </Button>
         </div>
-        <List className="w-64">
+        <List className="w-64 bg-gray-800 h-full">
           {links.map((link) => (
             <ListItem key={link.name} disablePadding>
               <ListItemButton
