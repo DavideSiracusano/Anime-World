@@ -1,7 +1,7 @@
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 
-function CardAnime({ card, addToFavorites, isFavorite }) {
+function CardAnime({ card, addToFavorites, isFavorite, seeDetails }) {
   return (
     <div className="relative  bg-gray-800 text-white border border-gray-700 rounded shadow-lg p-4 flex flex-col items-center transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
       {/* Icona cuore */}
@@ -24,6 +24,7 @@ function CardAnime({ card, addToFavorites, isFavorite }) {
           src={card.images.jpg.image_url}
           alt={card.title}
           className="w-48 h-72 object-cover rounded-md mb-3"
+          onClick={seeDetails}
         />
       )}
 

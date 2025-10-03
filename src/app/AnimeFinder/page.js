@@ -13,6 +13,7 @@ export default function AnimeRecognizer() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Componente per nascondere l'input material ui
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
     clipPath: "inset(50%)",
