@@ -75,6 +75,7 @@ export default function AnimeRecognizer() {
   };
 
   // Invia l'immagine a trace.moe e popola i titoli leggibili
+  // Invia l'immagine a trace.moe e popola i titoli leggibili
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!file) return;
@@ -83,39 +84,39 @@ export default function AnimeRecognizer() {
     setError(null);
     setResults([]);
 
-    // crea un nuovo oggetto file reader per la lettura dell'immagine
     try {
-      const reader = new FileReader();
-      // split prende solo la stringa dopo la virgola
-      reader.onloadend = async () => {
-        const base64Data = reader.result.split(",")[1];
+      // Leggi il file come base64
+      const base64Data = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result.split(",")[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
 
-        const traceRes = await fetch("/api/trace", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ image: base64Data }),
-        });
+      const traceRes = await fetch("/api/trace", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image: base64Data }),
+      });
 
-        if (!traceRes.ok) throw new Error("Errore nella chiamata a trace.moe");
-        const traceData = await traceRes.json();
+      if (!traceRes.ok) throw new Error("Errore nella chiamata a trace.moe");
+      const traceData = await traceRes.json();
 
-        if (!traceData.result || traceData.result.length === 0) {
-          setResults([]);
-          setError("Nessun anime trovato");
-          return;
-        }
+      if (!traceData.result || traceData.result.length === 0) {
+        setResults([]);
+        setError("Nessun anime trovato");
+        return;
+      }
 
-        // Ottieni titoli leggibili da Anilist
-        const fullResults = await Promise.all(
-          traceData.result.slice(0, 5).map(async (item) => {
-            const title = await fetchAnilistTitle(item.anilist);
-            return { ...item, anilistTitle: title };
-          })
-        );
+      // Ottieni titoli leggibili da Anilist
+      const fullResults = await Promise.all(
+        traceData.result.slice(0, 5).map(async (item) => {
+          const title = await fetchAnilistTitle(item.anilist);
+          return { ...item, anilistTitle: title };
+        })
+      );
 
-        setResults(fullResults);
-      };
-      reader.readAsDataURL(file);
+      setResults(fullResults);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -178,6 +179,15 @@ export default function AnimeRecognizer() {
         <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded mt-6">
           <p className="font-bold">❌ Errore:</p>
           <p>{error}</p>
+        </div>
+      )}
+
+      {loading && (
+        <div className="flex flex-col items-center justify-center mt-8">
+          <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          <p className="mt-4 text-blue-600 font-semibold">
+            Analizzando immagine...
+          </p>
         </div>
       )}
 

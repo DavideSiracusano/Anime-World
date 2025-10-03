@@ -2,9 +2,9 @@ import Home from "./Home/page";
 
 export function generateMetadata() {
   return {
-    title: "Home Page",
+    title: "My AnimeWorld",
     description:
-      "Benvenuto nel mio sito Next.js, sito web per gli amanti di anime",
+      "Benvenuto nella homepage del mio sito Next.js, sito web per gli amanti di anime",
   };
 }
 
