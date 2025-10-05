@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 
 function About() {
@@ -42,12 +43,12 @@ function About() {
           `}
           <span className="text-pink-400 font-semibold">otaku</span>!
         </p>
-        <a
-          href="#"
+        <Link
+          href="/"
           className="inline-block bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300"
         >
           Scopri gli anime ora!
-        </a>
+        </Link>
       </div>
     </section>
   );
