@@ -66,7 +66,10 @@ function FetchNews() {
 
       {/* Toast */}
       {toast && (
-        <div className="toast toast-top toast-center" data-theme="light">
+        <div
+          className="toast toast-sticky toast-top toast-center z-50"
+          data-theme="light"
+        >
           {toast.type === "success" && (
             <div className="alert alert-success">
               <span>{toast.message}</span>

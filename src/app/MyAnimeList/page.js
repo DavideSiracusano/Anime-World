@@ -77,7 +77,7 @@ function AnimeList() {
       {!loading && searchResults.length > 0 && (
         <>
           <h2 className="text-2xl font-bold mb-4">Risultati della ricerca</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mb-2">
             {searchResults.map((card) => (
               <CardAnime
                 key={card.mal_id}

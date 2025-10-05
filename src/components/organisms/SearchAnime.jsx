@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import CardAnime from "../molecules/CardAnime";
 
 export default function SearchAnime({ onSearchResults }) {
   const [query, setQuery] = useState("");
@@ -40,10 +39,10 @@ export default function SearchAnime({ onSearchResults }) {
           placeholder="Cerca un anime"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="border rounded px-2 py-1"
+          className="border rounded px-4 py-2 w-40"
         />
-        <button type="submit" className="bg-blue-600 text-white px-4 rounded">
-          Cerca
+        <button type="submit" className="bg-blue-600 px-4 text-white rounded">
+          🔍
         </button>
 
         {/* button che permette di cancellare la ricerca rendering condizionale */}
@@ -53,7 +52,7 @@ export default function SearchAnime({ onSearchResults }) {
             onClick={handleClear}
             className="bg-gray-500 text-white px-4 rounded"
           >
-            Cancella
+            🗑️
           </button>
         )}
       </form>

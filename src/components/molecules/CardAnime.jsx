@@ -17,21 +17,25 @@ function CardAnime({ card, addToFavorites, isFavorite, seeDetails }) {
         />
       )}
 
-      <h2 className="font-bold text-lg mb-2 text-center">{card.title}</h2>
+      <h2 className="font-bold text-lg my-4 text-center">{card.title}</h2>
 
       {card.images?.jpg?.image_url && (
         <img
           src={card.images.jpg.image_url}
           alt={card.title}
-          className="w-48 h-72 object-cover rounded-md mb-3"
+          className="w-full h-48 object-cover rounded-md mb-3"
           onClick={seeDetails}
         />
       )}
 
-      <p className="text-sm text-gray-300 mb-2 text-center">
-        {card.synopsis
-          ? card.synopsis.slice(0, 200) + "..."
-          : "Descrizione non disponibile"}
+      <p className="text-sm text-gray-300 mb-2 text-center">{`Episodi: ${card.episodes}`}</p>
+
+      <p className="text-xs text-gray-400">
+        <strong>Stato:</strong> {card.status}
+      </p>
+
+      <p className="text-xs text-gray-400">
+        <strong>Genere:</strong> {card.genres?.[0]?.name || "N/D"}
       </p>
 
       <p className="text-xs text-gray-400">
