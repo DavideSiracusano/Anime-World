@@ -58,10 +58,10 @@ function Navbar() {
     { name: "Home", href: "/" },
     { name: "MyAnimeList", href: "/my-list" },
     { name: "AnimeFinder", href: "/anime/finder" },
-    { name: "About", href: "/about" },
     !isLoggedIn ? { name: "Login", href: "/login" } : null,
     !isLoggedIn ? { name: "SignUp", href: "/signup" } : null,
     isLoggedIn ? { name: "Logout", href: "#", onClick: handleLogout } : null,
+    { name: "About", href: "/about" },
   ].filter(Boolean);
 
   const toggleDrawer = (state) => () => {
