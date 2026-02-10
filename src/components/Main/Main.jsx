@@ -1,7 +1,7 @@
 import React from "react";
 
 function Main({ children }) {
-  return <div className="min-h-screen">{children}</div>;
+  return <main className="min-h-screen">{children}</main>;
 }
 
 export default Main;

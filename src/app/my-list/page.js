@@ -4,12 +4,12 @@ import { useRouter } from "next/navigation";
 import CardAnime from "@/components/molecules/CardAnime";
 import SearchAnime from "@/components/organisms/SearchAnime";
 
-function AnimeList() {
+export default function AnimeList() {
   const router = useRouter();
 
   const [favorites, setFavorites] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
-  const [loading, setLoading] = useState(false); // nuovo stato per caricamento
+  const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
 
   const handleCardClick = (card) => {
@@ -29,7 +29,6 @@ function AnimeList() {
     setFavorites(newFavorites);
     localStorage.setItem("favorites", JSON.stringify(newFavorites));
 
-    // mostra il toast
     setToast({
       message: isFavorite ? "Rimosso dai preferiti" : "Aggiunto ai preferiti",
       type: isFavorite ? "error" : "success",
@@ -46,11 +45,10 @@ function AnimeList() {
           setTimeout(() => {
             setSearchResults(results);
             setLoading(false);
-          }, 500); // simula caricamento
+          }, 500);
         }}
       />
 
-      {/* Toast */}
       {toast && (
         <div className="toast toast-top toast-center" data-theme="light">
           {toast.type === "success" && (
@@ -66,14 +64,12 @@ function AnimeList() {
         </div>
       )}
 
-      {/* Skeleton durante il caricamento */}
       {loading && (
         <div>
           <span className="loading loading-spinner text-primary"></span>
         </div>
       )}
 
-      {/* Risultati della ricerca */}
       {!loading && searchResults.length > 0 && (
         <>
           <h2 className="text-2xl font-bold mb-4">Risultati della ricerca</h2>
@@ -91,7 +87,6 @@ function AnimeList() {
         </>
       )}
 
-      {/* Preferiti */}
       {!loading &&
         (favorites.length === 0 ? (
           <p className="text-center text-xl text-gray-400">
@@ -113,5 +108,3 @@ function AnimeList() {
     </div>
   );
 }
-
-export default AnimeList;

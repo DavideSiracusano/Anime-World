@@ -113,7 +113,7 @@ export default function AnimeRecognizer() {
         traceData.result.slice(0, 5).map(async (item) => {
           const title = await fetchAnilistTitle(item.anilist);
           return { ...item, anilistTitle: title };
-        })
+        }),
       );
 
       setResults(fullResults);

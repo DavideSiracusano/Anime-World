@@ -1,17 +1,19 @@
-import Home from "./Home/page";
+import React from "react";
+import FetchNews from "@/components/organisms/FetchNews";
 
-export function generateMetadata() {
-  return {
-    title: "My AnimeWorld",
-    description:
-      "Benvenuto nella homepage del mio sito Next.js, sito web per gli amanti di anime",
-  };
-}
+export const metadata = {
+  title: "My AnimeWorld",
+  description:
+    "Benvenuto nella homepage del mio sito Next.js, sito web per gli amanti di anime",
+};
 
-export default function Page() {
+export default function Home() {
   return (
-    <>
-      <Home />
-    </>
+    <div>
+      <h1 className="home-title text-center text-2xl font-bold my-4">
+        Top Anime Del Momento!
+      </h1>
+      <FetchNews />
+    </div>
   );
 }

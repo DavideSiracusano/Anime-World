@@ -1,7 +1,12 @@
 import Link from "next/link";
 import React from "react";
 
-function About() {
+export const metadata = {
+  title: "About - AnimeWorld",
+  description: "Scopri di più su AnimeWorld e i nostri servizi",
+};
+
+export default function About() {
   return (
     <section className="min-h-screen py-16 px-6 md:px-20 bg-gradient-to-r from-purple-900 via-indigo-900 to-gray-900 text-white">
       <div className="max-w-4xl mx-auto text-center">
@@ -37,7 +42,7 @@ function About() {
         <p className="text-indigo-400 text-lg md:text-xl leading-relaxed mb-6">
           {`
              Aggiungi anime alla tua lista personale
-          , tieni traccia delle serie che segui e, grazie all’integrazione con
+          , tieni traccia delle serie che segui e, grazie all'integrazione con
           Trace.moe, puoi cercare un anime partendo da un'immagine o uno
           screenshot 📸 – perfetto per veri 
           `}
@@ -53,5 +58,3 @@ function About() {
     </section>
   );
 }
-
-export default About;
