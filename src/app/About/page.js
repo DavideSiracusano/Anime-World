@@ -1,11 +1,6 @@
 import Link from "next/link";
 import React from "react";
 
-export const metadata = {
-  title: "About - AnimeWorld",
-  description: "Scopri di più su AnimeWorld e i nostri servizi",
-};
-
 export default function About() {
   return (
     <section className="min-h-screen py-16 px-6 md:px-20 bg-gradient-to-r from-purple-900 via-indigo-900 to-gray-900 text-white">
