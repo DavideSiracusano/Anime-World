@@ -108,20 +108,20 @@ export default function LoginPage() {
           </form>
 
           {/* Personaggio che si appoggia al bordo superiore destro - DESKTOP */}
-          <div className="hidden md:block absolute -top-35 right-0 pointer-events-none">
+          <div className="hidden md:block absolute -top-29 right-10 pointer-events-none">
             <Image
-              src="/animeLogin.png"
+              src="/animeGuyLogin.png"
               alt="personaggio anime"
-              width={290}
+              width={250}
               height={200}
               className="object-contain drop-shadow-2xl  "
             />
           </div>
 
           {/* Personaggio che si appoggia sopra - MOBILE */}
-          <div className="md:hidden absolute -top-25 right-2 pointer-events-none">
+          <div className="md:hidden absolute -top-22 right-2 pointer-events-none">
             <Image
-              src="/animeLogin.png"
+              src="/animeGuyLogin.png"
               alt="personaggio anime"
               width={200}
               height={200}

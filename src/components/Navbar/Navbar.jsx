@@ -4,9 +4,6 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
-  AppBar,
-  Toolbar,
-  IconButton,
   Button,
   Drawer,
   List,
@@ -21,6 +18,7 @@ function Navbar() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -32,8 +30,9 @@ function Navbar() {
     }
   };
 
-  // Controlla se l'utente è loggato al caricamento
   useEffect(() => {
+    setMounted(true);
+
     const checkAuthStatus = async () => {
       try {
         const response = await fetch("http://localhost:5000/api/auth/me", {
@@ -53,14 +52,22 @@ function Navbar() {
     checkAuthStatus();
   }, []);
 
-  // ✅ Filter(Boolean) rimuove i valori null dall'array
   const links = [
     { name: "Home", href: "/" },
     { name: "MyAnimeList", href: "/my-list" },
     { name: "AnimeFinder", href: "/anime/finder" },
-    !isLoggedIn ? { name: "Login", href: "/login" } : null,
-    !isLoggedIn ? { name: "Signup", href: "/signup" } : null,
-    isLoggedIn ? { name: "Logout", href: "#", onClick: handleLogout } : null,
+    ...(mounted
+      ? [
+          !isLoggedIn ? { name: "Login", href: "/login" } : null,
+          !isLoggedIn ? { name: "Signup", href: "/signup" } : null,
+          isLoggedIn
+            ? { name: "Logout", href: "#", onClick: handleLogout }
+            : null,
+        ]
+      : [
+          { name: "Login", href: "/login" },
+          { name: "Signup", href: "/signup" },
+        ]),
     { name: "About", href: "/about" },
   ].filter(Boolean);
 
@@ -70,18 +77,17 @@ function Navbar() {
 
   return (
     <>
-      <AppBar position="static">
+      <header className="bg-gray-900 sticky top-0 z-50 shadow-lg">
         <div className="p-4 sm:p-6 bg-[url('/header.png')] bg-cover bg-[center_25%] bg-blend-darken bg-black/50 w-full shadow-2xl">
-          <Toolbar className="flex justify-between items-center ">
+          <div className="flex justify-between items-center">
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
               My AnimeWorld
             </h1>
 
-            {/* Link desktop - ✅ gestisce sia Link che button con onClick */}
-            <div className="hidden md:flex gap-6" suppressHydrationWarning>
+            {/* Desktop links */}
+            <nav className="hidden md:flex gap-6">
               {links.map((link) =>
                 link.onClick ? (
-                  // Se il link ha onClick (es. Logout), usa un button
                   <button
                     key={link.name}
                     onClick={link.onClick}
@@ -90,7 +96,6 @@ function Navbar() {
                     {link.name}
                   </button>
                 ) : (
-                  // Altrimenti usa un Link normale
                   <Link
                     key={link.name}
                     href={link.href}
@@ -100,25 +105,21 @@ function Navbar() {
                   </Link>
                 ),
               )}
-            </div>
+            </nav>
 
-            {/* Hamburger mobile */}
-            <div className="md:hidden">
-              <IconButton
-                edge="end"
-                color="inherit"
-                aria-label="menu"
-                onClick={toggleDrawer(true)}
-                className="text-white"
-              >
-                <MenuIcon fontSize="large" />
-              </IconButton>
-            </div>
-          </Toolbar>
+            {/* Mobile menu button */}
+            <button
+              onClick={toggleDrawer(true)}
+              className="md:hidden text-white p-2 hover:bg-white/10 rounded transition"
+              aria-label="menu"
+            >
+              <MenuIcon fontSize="large" />
+            </button>
+          </div>
         </div>
-      </AppBar>
+      </header>
 
-      {/* Drawer mobile */}
+      {/* ✅ Drawer MUI rimane, ha senso usarlo */}
       <Drawer anchor="left" open={open} onClose={toggleDrawer(false)}>
         <div className="flex justify-end p-2 bg-gray-900">
           <Button
@@ -129,12 +130,10 @@ function Navbar() {
             X
           </Button>
         </div>
-        <List className="w-64 bg-gray-800 h-full" suppressHydrationWarning>
-          {/* ✅ Anche qui gestisce onClick e Link */}
+        <List className="w-64 bg-gray-800 h-full">
           {links.map((link) => (
             <ListItem key={link.name} disablePadding>
               {link.onClick ? (
-                // Logout: esegue onClick e chiude il drawer
                 <ListItemButton
                   onClick={() => {
                     link.onClick();
@@ -147,7 +146,6 @@ function Navbar() {
                   />
                 </ListItemButton>
               ) : (
-                // Link normale
                 <ListItemButton
                   component={Link}
                   href={link.href}

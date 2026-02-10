@@ -16,8 +16,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "My AnimeWorld",
-  description: "site web per gli amanti di anime",
+  title: "Home - My AnimeWorld",
+  description:
+    "Scopri i migliori anime del momento. Ricerca, salva e gestisci i tuoi anime preferiti in un'unica piattaforma.",
 };
 
 export default function RootLayout({ children }) {
