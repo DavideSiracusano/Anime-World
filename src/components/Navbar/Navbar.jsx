@@ -78,29 +78,28 @@ function Navbar() {
             </h1>
 
             {/* Link desktop - ✅ gestisce sia Link che button con onClick */}
-            <div className="hidden md:flex gap-6">
-              {isMounted &&
-                links.map((link) =>
-                  link.onClick ? (
-                    // Se il link ha onClick (es. Logout), usa un button
-                    <button
-                      key={link.name}
-                      onClick={link.onClick}
-                      className="text-white hover:text-red-400 transition cursor-pointer"
-                    >
-                      {link.name}
-                    </button>
-                  ) : (
-                    // Altrimenti usa un Link normale
-                    <Link
-                      key={link.name}
-                      href={link.href}
-                      className="text-white hover:text-red-400 transition"
-                    >
-                      {link.name}
-                    </Link>
-                  ),
-                )}
+            <div className="hidden md:flex gap-6" suppressHydrationWarning>
+              {links.map((link) =>
+                link.onClick ? (
+                  // Se il link ha onClick (es. Logout), usa un button
+                  <button
+                    key={link.name}
+                    onClick={link.onClick}
+                    className="text-white hover:text-red-400 transition cursor-pointer"
+                  >
+                    {link.name}
+                  </button>
+                ) : (
+                  // Altrimenti usa un Link normale
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    className="text-white hover:text-red-400 transition"
+                  >
+                    {link.name}
+                  </Link>
+                ),
+              )}
             </div>
 
             {/* Hamburger mobile */}
@@ -130,39 +129,38 @@ function Navbar() {
             X
           </Button>
         </div>
-        <List className="w-64 bg-gray-800 h-full">
+        <List className="w-64 bg-gray-800 h-full" suppressHydrationWarning>
           {/* ✅ Anche qui gestisce onClick e Link */}
-          {isMounted &&
-            links.map((link) => (
-              <ListItem key={link.name} disablePadding>
-                {link.onClick ? (
-                  // Logout: esegue onClick e chiude il drawer
-                  <ListItemButton
-                    onClick={() => {
-                      link.onClick();
-                      toggleDrawer(false)();
-                    }}
-                  >
-                    <ListItemText
-                      primary={link.name}
-                      className="text-white hover:text-red-400 transition"
-                    />
-                  </ListItemButton>
-                ) : (
-                  // Link normale
-                  <ListItemButton
-                    component={Link}
-                    href={link.href}
-                    onClick={toggleDrawer(false)}
-                  >
-                    <ListItemText
-                      primary={link.name}
-                      className="text-white hover:text-red-400 transition"
-                    />
-                  </ListItemButton>
-                )}
-              </ListItem>
-            ))}
+          {links.map((link) => (
+            <ListItem key={link.name} disablePadding>
+              {link.onClick ? (
+                // Logout: esegue onClick e chiude il drawer
+                <ListItemButton
+                  onClick={() => {
+                    link.onClick();
+                    toggleDrawer(false)();
+                  }}
+                >
+                  <ListItemText
+                    primary={link.name}
+                    className="text-white hover:text-red-400 transition"
+                  />
+                </ListItemButton>
+              ) : (
+                // Link normale
+                <ListItemButton
+                  component={Link}
+                  href={link.href}
+                  onClick={toggleDrawer(false)}
+                >
+                  <ListItemText
+                    primary={link.name}
+                    className="text-white hover:text-red-400 transition"
+                  />
+                </ListItemButton>
+              )}
+            </ListItem>
+          ))}
         </List>
       </Drawer>
     </>
