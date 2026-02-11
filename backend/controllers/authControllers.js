@@ -7,15 +7,16 @@ import { prisma } from "../config/db.js";
 import { generateToken } from "../utils/generateToken.js";
 
 //funzione per gestire signup
-
 const signup = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { name, email, password } = req.body;
 
     const normalizedEmail = email?.trim().toLowerCase();
 
-    if (!normalizedEmail || !password) {
-      return res.status(400).json({ error: "Email and password are required" });
+    if (!name || !normalizedEmail || !password) {
+      return res
+        .status(400)
+        .json({ error: "Name, email, and password are required" });
     }
 
     // Verificare se l'utente esiste già
@@ -33,6 +34,7 @@ const signup = async (req, res) => {
     // Creare l'utente nel database
     const user = await prisma.user.create({
       data: {
+        name: name,
         email: normalizedEmail,
         password: hashedPassword,
       },
@@ -44,7 +46,7 @@ const signup = async (req, res) => {
     res.status(201).json({
       success: true,
       message: "User created",
-      user: { id: user.id, email: user.email },
+      user: { id: user.id, name: user.name, email: user.email },
       token: token,
     });
   } catch (error) {
@@ -88,7 +90,7 @@ const login = async (req, res) => {
     res.json({
       success: true,
       message: "Login successful",
-      user: { id: user.id, email: user.email },
+      user: { id: user.id, name: user.name, email: user.email },
       token: token,
     });
   } catch (error) {
@@ -104,8 +106,8 @@ const logout = (req, res) => {
 const getMe = async (req, res) => {
   try {
     const user = await prisma.user.findUnique({
-      where: { id: req.userId },
-      select: { id: true, email: true },
+      where: { id: req.user.id },
+      select: { id: true, name: true, email: true },
     });
 
     if (!user) {

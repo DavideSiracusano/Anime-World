@@ -9,7 +9,7 @@ export const verifyToken = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.userId = decoded.id;
+    req.user = decoded; // Salva l'intero oggetto user nel request
     next();
   } catch (error) {
     res.status(401).json({ error: "Invalid token" });

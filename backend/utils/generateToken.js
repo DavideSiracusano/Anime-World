@@ -6,12 +6,11 @@ export const generateToken = (user, res) => {
   };
   const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1h" });
 
-  const isProduction = process.env.NODE_ENV === "production";
-
   res.cookie("token", token, {
     httpOnly: true,
-    sameSite: "lax",
-    secure: isProduction, // true in production, false in development
+    sameSite: false, // Permette cross-origin su localhost
+    secure: false, // Richiesto per localhost senza HTTPS
+    path: "/",
   });
   return token;
 };

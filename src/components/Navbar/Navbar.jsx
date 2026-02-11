@@ -17,13 +17,13 @@ import { authService } from "@/services/api";
 function Navbar() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
   const [mounted, setMounted] = useState(false);
 
   const handleLogout = async () => {
     try {
       await authService.logout();
-      setIsLoggedIn(false);
+      setUser(null);
       router.push("/");
     } catch (error) {
       console.error("Logout failed:", error);
@@ -40,12 +40,12 @@ function Navbar() {
         });
         if (response.ok) {
           const data = await response.json();
-          setIsLoggedIn(data.authenticated);
+          setUser(data.user);
         } else {
-          setIsLoggedIn(false);
+          setUser(null);
         }
       } catch (error) {
-        setIsLoggedIn(false);
+        setUser(null);
       }
     };
 
@@ -58,10 +58,14 @@ function Navbar() {
     { name: "AnimeFinder", href: "/anime/finder" },
     ...(mounted
       ? [
-          !isLoggedIn ? { name: "Login", href: "/login" } : null,
-          !isLoggedIn ? { name: "Signup", href: "/signup" } : null,
-          isLoggedIn
-            ? { name: "Logout", href: "#", onClick: handleLogout }
+          !user ? { name: "Login", href: "/login" } : null,
+          !user ? { name: "Signup", href: "/signup" } : null,
+          user
+            ? {
+                name: `Logout (${user.name})`,
+                href: "#",
+                onClick: handleLogout,
+              }
             : null,
         ]
       : [
@@ -80,9 +84,15 @@ function Navbar() {
       <header className="bg-gray-900 sticky top-0 z-50 shadow-lg">
         <div className="p-4 sm:p-6 bg-[url('/header.png')] bg-cover bg-[center_25%] bg-blend-darken bg-black/50 w-full shadow-2xl">
           <div className="flex justify-between items-center">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
-              My AnimeWorld
-            </h1>
+            {user ? (
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
+                Ciao, {user.name}!
+              </h1>
+            ) : (
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
+                Benvenuto su AnimeWorld
+              </h1>
+            )}
 
             {/* Desktop links */}
             <nav className="hidden md:flex gap-6">

@@ -4,6 +4,7 @@ import { connectDB, disconnectDB } from "./config/db.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/authRoutes.js";
+import favoriteRoutes from "./routes/favoriteRoutes.js";
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use(cors(corsOptions));
 const prisma = connectDB();
 
 app.use("/api/auth", authRoutes);
+app.use("/api/favorites", favoriteRoutes);
 
 process.on("SIGINT", async () => {
   await disconnectDB();

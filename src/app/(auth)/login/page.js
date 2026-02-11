@@ -110,7 +110,7 @@ export default function LoginPage() {
           {/* Personaggio che si appoggia al bordo superiore destro - DESKTOP */}
           <div className="hidden md:block absolute -top-29 right-10 pointer-events-none">
             <Image
-              src="/animeGuyLogin.png"
+              src="/loginAnime.png"
               alt="personaggio anime"
               width={250}
               height={200}
@@ -121,7 +121,7 @@ export default function LoginPage() {
           {/* Personaggio che si appoggia sopra - MOBILE */}
           <div className="md:hidden absolute -top-22 right-2 pointer-events-none">
             <Image
-              src="/animeGuyLogin.png"
+              src="/loginAnime.png"
               alt="personaggio anime"
               width={200}
               height={200}

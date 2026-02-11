@@ -8,6 +8,7 @@ import { authService } from "@/services/api";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
@@ -17,6 +18,10 @@ export default function RegisterPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
+
+    if (!name) {
+      newErrors.name = "Nome richiesto";
+    }
 
     if (!email) {
       newErrors.email = "Email richiesta";
@@ -35,8 +40,9 @@ export default function RegisterPage() {
     if (Object.keys(newErrors).length === 0) {
       setLoading(true);
       try {
-        await authService.signup(email, password);
+        await authService.signup(name, email, password);
         setSuccess(true);
+        setName("");
         setEmail("");
         setPassword("");
         setTimeout(() => {
@@ -60,6 +66,20 @@ export default function RegisterPage() {
           </h1>
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">Nome</label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full bg-gray-700 border border-gray-600 rounded-md p-2 text-white outline-none focus:ring-2 focus:ring-purple-500"
+                placeholder="Inserisci il tuo nome"
+              />
+              {errors.name && (
+                <p className="text-red-400 text-sm mt-1">{errors.name}</p>
+              )}
+            </div>
+
             <div>
               <label className="block text-sm font-medium mb-1">Email</label>
               <input
@@ -120,7 +140,7 @@ export default function RegisterPage() {
         {/* Immagine - Destra (piccola su mobile, grande su desktop) */}
         <div className="w-full md:w-1/2 md:-ml-16 flex items-center justify-center md:justify-end z-20">
           <Image
-            src="/animeSignup.png"
+            src="/signupAnime.png"
             alt="personaggio anime che fa registrazione"
             width={400}
             height={400}

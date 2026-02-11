@@ -29,10 +29,10 @@ export const authService = {
       body: JSON.stringify({ email, password }),
     }),
 
-  signup: (email, password) =>
+  signup: (name, email, password) =>
     apiCall("/api/auth/signup", {
       method: "POST",
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ name, email, password }),
     }),
 
   logout: () =>
@@ -42,6 +42,33 @@ export const authService = {
 
   getMe: () =>
     apiCall("/api/auth/me", {
+      method: "GET",
+    }),
+};
+
+export const favoriteService = {
+  // Ottenere tutti i favoriti dell'utente
+  getFavorites: () =>
+    apiCall("/api/favorites", {
+      method: "GET",
+    }),
+
+  // Aggiungere un anime ai preferiti
+  addFavorite: (mal_id, title, image) =>
+    apiCall("/api/favorites", {
+      method: "POST",
+      body: JSON.stringify({ mal_id, title, image }),
+    }),
+
+  // Rimuovere un anime dai preferiti
+  removeFavorite: (mal_id) =>
+    apiCall(`/api/favorites/${mal_id}`, {
+      method: "DELETE",
+    }),
+
+  // Controllare se un anime è nei favoriti
+  checkIfFavorite: (mal_id) =>
+    apiCall(`/api/favorites/${mal_id}`, {
       method: "GET",
     }),
 };
