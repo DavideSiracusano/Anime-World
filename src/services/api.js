@@ -12,7 +12,16 @@ async function apiCall(endpoint, options = {}) {
     });
 
     if (!response.ok) {
-      throw new Error(`API Error: ${response.status} ${response.statusText}`);
+      let errorMessage = `API Error: ${response.status} ${response.statusText}`;
+      try {
+        const errorData = await response.json();
+        if (errorData.error) {
+          errorMessage = errorData.error;
+        }
+      } catch (e) {
+        // Se non è JSON, mantieni il messaggio generico
+      }
+      throw new Error(errorMessage);
     }
 
     return await response.json();
@@ -70,5 +79,28 @@ export const favoriteService = {
   checkIfFavorite: (mal_id) =>
     apiCall(`/api/favorites/${mal_id}`, {
       method: "GET",
+    }),
+};
+
+export const topicService = {
+  getTopics: () => apiCall("/api/topics", { method: "GET" }),
+
+  createTopic: (data) =>
+    apiCall("/api/topics", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+};
+
+export const commentService = {
+  getComments: (topicId) =>
+    apiCall(`/api/topics/${topicId}/comments`, {
+      method: "GET",
+    }),
+
+  createComment: (topicId, content) =>
+    apiCall(`/api/topics/${topicId}/comments`, {
+      method: "POST",
+      body: JSON.stringify({ content }),
     }),
 };

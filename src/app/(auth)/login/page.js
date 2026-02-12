@@ -40,7 +40,12 @@ export default function LoginPage() {
           window.location.href = "/my-list"; // Ricaricare completamente la pagina
         }, 1500);
       } catch (error) {
-        setErrors({ submit: error.message });
+        const errorMsg = error.message === "User not found" 
+          ? "Utente non trovato" 
+          : error.message === "Invalid password"
+          ? "Password scorretta"
+          : error.message;
+        setErrors({ submit: errorMsg });
       } finally {
         setLoading(false);
       }

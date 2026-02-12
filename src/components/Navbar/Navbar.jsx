@@ -56,6 +56,7 @@ function Navbar() {
     { name: "Home", href: "/" },
     { name: "MyAnimeList", href: "/my-list" },
     { name: "AnimeFinder", href: "/anime/finder" },
+    { name: "Topics", href: "/topics" },
     ...(mounted
       ? [
           !user ? { name: "Login", href: "/login" } : null,
