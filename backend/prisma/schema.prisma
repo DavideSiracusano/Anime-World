@@ -17,6 +17,10 @@ model User {
   
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
+
+  topics Topic[]
+
+  comments Comment[]
 }
 
 model Favorite {
@@ -27,6 +31,34 @@ model Favorite {
   image     String
 
   user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+}
+
+model Topic {
+  id        Int         @id @default(autoincrement())
+  title     String
+  content   String
+  userId    Int
+  likes     Int         @default(0)
+
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  comments Comment[]
+}
+
+model Comment {
+  id        Int         @id @default(autoincrement())
+  content   String
+  userId    Int
+  topicId   Int
+
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topic     Topic       @relation(fields: [topicId], references: [id], onDelete: Cascade)
   
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
