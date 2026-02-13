@@ -56,7 +56,7 @@ export default function AnimeList() {
     router.push(`/anime/${card.mal_id}`);
   };
 
-  // Aggiunge o rimuove dai preferiti (comunica con il database)
+  // Aggiunge o rimuove dai preferiti
   const togglePersonalFavorite = async (card) => {
     try {
       const isFavorite = favorites.some((fav) => fav.mal_id === card.mal_id);
@@ -110,20 +110,13 @@ export default function AnimeList() {
   }
 
   return (
-    <div className="flex flex-col items-center m-5">
-      <SearchAnime
-        onSearchResults={(results) => {
-          setLoading(true);
-          setSearchResults([]);
-          setTimeout(() => {
-            setSearchResults(results);
-            setLoading(false);
-          }, 500);
-        }}
-      />
-
+    <div className="topics-page min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 p-8">
+      {/* Toast Notification */}
       {toast && (
-        <div className="toast toast-top toast-center" data-theme="light">
+        <div
+          className="toast toast-sticky toast-top toast-center z-50"
+          data-theme="light"
+        >
           {toast.type === "success" && (
             <div className="alert alert-success">
               <span>{toast.message}</span>
@@ -136,48 +129,62 @@ export default function AnimeList() {
           )}
         </div>
       )}
+      <div className="flex flex-col items-center m-5">
+        <SearchAnime
+          onSearchResults={(results) => {
+            setLoading(true);
+            setSearchResults([]);
+            setTimeout(() => {
+              setSearchResults(results);
+              setLoading(false);
+            }, 500);
+          }}
+        />
 
-      {loading && (
-        <div>
-          <span className="loading loading-spinner text-primary"></span>
-        </div>
-      )}
-
-      {!loading && searchResults.length > 0 && (
-        <>
-          <h2 className="text-2xl font-bold mb-4">Risultati della ricerca</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mb-2">
-            {searchResults.map((card) => (
-              <CardAnime
-                key={card.mal_id}
-                card={card}
-                addToFavorites={() => togglePersonalFavorite(card)}
-                isFavorite={favorites.some((fav) => fav.mal_id === card.mal_id)}
-                seeDetails={() => handleCardClick(card)}
-              />
-            ))}
+        {loading && (
+          <div>
+            <span className="loading loading-spinner text-primary"></span>
           </div>
-        </>
-      )}
+        )}
 
-      {!loading &&
-        (favorites.length === 0 ? (
-          <p className="text-center text-xl text-gray-400">
-            Non ci sono anime preferiti
-          </p>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {favorites.map((card) => (
-              <CardAnime
-                key={card.mal_id}
-                card={card}
-                addToFavorites={() => togglePersonalFavorite(card)}
-                isFavorite={true}
-                seeDetails={() => handleCardClick(card)}
-              />
-            ))}
-          </div>
-        ))}
+        {!loading && searchResults.length > 0 && (
+          <>
+            <h2 className="text-2xl font-bold mb-4">Risultati della ricerca</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mb-2">
+              {searchResults.map((card) => (
+                <CardAnime
+                  key={card.mal_id}
+                  card={card}
+                  addToFavorites={() => togglePersonalFavorite(card)}
+                  isFavorite={favorites.some(
+                    (fav) => fav.mal_id === card.mal_id,
+                  )}
+                  seeDetails={() => handleCardClick(card)}
+                />
+              ))}
+            </div>
+          </>
+        )}
+
+        {!loading &&
+          (favorites.length === 0 ? (
+            <p className="text-center text-xl text-gray-400">
+              Non ci sono anime preferiti
+            </p>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {favorites.map((card) => (
+                <CardAnime
+                  key={card.mal_id}
+                  card={card}
+                  addToFavorites={() => togglePersonalFavorite(card)}
+                  isFavorite={true}
+                  seeDetails={() => handleCardClick(card)}
+                />
+              ))}
+            </div>
+          ))}
+      </div>
     </div>
   );
 }

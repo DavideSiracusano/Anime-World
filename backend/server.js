@@ -7,6 +7,7 @@ import authRoutes from "./routes/authRoutes.js";
 import favoriteRoutes from "./routes/favoriteRoutes.js";
 import topicsRoutes from "./routes/topicsRoutes.js";
 import commentsRoutes from "./routes/commentsRoutes.js";
+import likesRoutes from "./routes/likesRoutes.js";
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/favorites", favoriteRoutes);
 app.use("/api/topics", topicsRoutes);
 app.use("/api/topics/:topicId/comments", commentsRoutes);
+app.use("/api/topics/:topicId/likes", likesRoutes);
 
 process.on("SIGINT", async () => {
   await disconnectDB();

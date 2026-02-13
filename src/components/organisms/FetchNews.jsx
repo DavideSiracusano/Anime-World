@@ -6,6 +6,7 @@ import CardAnime from "../molecules/CardAnime";
 import SearchAnime from "./SearchAnime";
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
+import { favoriteService } from "@/services/api";
 
 function FetchNews() {
   const API_TOP_ANIME = process.env.NEXT_PUBLIC_API_TOP_ANIME;
@@ -17,9 +18,31 @@ function FetchNews() {
   const [favorites, setFavorites] = useState([]);
   const [toast, setToast] = useState(null);
 
+  // Carica i preferiti dal backend
   useEffect(() => {
-    const storedFavorites = localStorage.getItem("favorites");
-    if (storedFavorites) setFavorites(JSON.parse(storedFavorites));
+    const loadFavorites = async () => {
+      try {
+        const response = await favoriteService.getFavorites();
+        if (response.success) {
+          const transformedFavorites = response.data.map((fav) => ({
+            mal_id: fav.mal_id,
+            title: fav.title,
+            images: {
+              jpg: {
+                image_url: fav.image,
+              },
+            },
+            episodes: 0,
+            status: "Favorito",
+            genres: [],
+          }));
+          setFavorites(transformedFavorites);
+        }
+      } catch (error) {
+        console.error("Errore nel caricamento dei preferiti:", error);
+      }
+    };
+    loadFavorites();
   }, []);
 
   useEffect(() => {
@@ -37,21 +60,41 @@ function FetchNews() {
       });
   }, []);
 
-  const toggleFavorite = (card) => {
-    const isFavorite = favorites.some((fav) => fav.mal_id === card.mal_id);
-    const newFavorites = isFavorite
-      ? favorites.filter((fav) => fav.mal_id !== card.mal_id)
-      : [...favorites, card];
+  const toggleFavorite = async (card) => {
+    try {
+      const isFavorite = favorites.some((fav) => fav.mal_id === card.mal_id);
 
-    setFavorites(newFavorites);
-    localStorage.setItem("favorites", JSON.stringify(newFavorites));
-
-    // mostra il toast
-    setToast({
-      message: isFavorite ? "Rimosso dai preferiti" : "Aggiunto ai preferiti",
-      type: isFavorite ? "error" : "success",
-    });
-    setTimeout(() => setToast(null), 3000);
+      if (isFavorite) {
+        // Rimuovi dai preferiti
+        await favoriteService.removeFavorite(card.mal_id);
+        setFavorites(favorites.filter((fav) => fav.mal_id !== card.mal_id));
+        setToast({
+          message: "Rimosso dai preferiti",
+          type: "error",
+        });
+      } else {
+        // Aggiungi ai preferiti
+        await favoriteService.addFavorite(
+          card.mal_id,
+          card.title,
+          card.images?.jpg?.image_url,
+        );
+        setFavorites([...favorites, card]);
+        setToast({
+          message: "Aggiunto ai preferiti",
+          type: "success",
+        });
+      }
+      setTimeout(() => setToast(null), 3000);
+    } catch (error) {
+      console.error("Errore nell'aggiornamento dei preferiti:", error);
+      setToast({
+        message:
+          "Non è stato possibile aggiornare i preferiti, login potrebbe essere scaduto",
+        type: "error",
+      });
+      setTimeout(() => setToast(null), 3000);
+    }
   };
 
   const handleCardClick = (card) => {

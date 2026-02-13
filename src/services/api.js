@@ -7,8 +7,8 @@ async function apiCall(endpoint, options = {}) {
         "Content-Type": "application/json",
         ...options.headers,
       },
-      credentials: "include",
-      ...options,
+      credentials: "include", // Include i cookie per l'autenticazione
+      ...options, // Spread le opzioni passate (method, body, etc.)
     });
 
     if (!response.ok) {
@@ -103,4 +103,18 @@ export const commentService = {
       method: "POST",
       body: JSON.stringify({ content }),
     }),
+};
+
+export const likeService = {
+  getLikes: (topicId) =>
+    apiCall(`/api/topics/${topicId}/likes`, { method: "GET" }),
+
+  checkUserLike: (topicId) =>
+    apiCall(`/api/topics/${topicId}/likes/check`, { method: "GET" }),
+
+  addLike: (topicId) =>
+    apiCall(`/api/topics/${topicId}/likes`, { method: "POST" }),
+
+  removeLike: (topicId) =>
+    apiCall(`/api/topics/${topicId}/likes`, { method: "DELETE" }),
 };

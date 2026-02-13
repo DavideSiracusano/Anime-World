@@ -19,6 +19,7 @@ model User {
   updatedAt DateTime    @updatedAt
 
   topics Topic[]
+  likes  Like[]
 
   comments Comment[]
 }
@@ -41,9 +42,9 @@ model Topic {
   title     String
   content   String
   userId    Int
-  likes     Int         @default(0)
 
   user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  likes     Like[]
   
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
@@ -62,5 +63,19 @@ model Comment {
   
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
+}
+
+model Like {
+  id        Int         @id @default(autoincrement())
+  userId    Int
+  topicId   Int
+
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topic     Topic       @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@unique([userId, topicId])
 }
 

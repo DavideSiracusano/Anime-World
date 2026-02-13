@@ -1,6 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
-import { topicService, commentService } from "@/services/api";
+import {
+  authService,
+  topicService,
+  commentService,
+  likeService,
+} from "@/services/api";
 import CommentForm from "@/components/molecules/CommentForm";
 
 export default function TopicsPage() {
@@ -10,13 +15,23 @@ export default function TopicsPage() {
   const [loading, setLoading] = useState(true);
   const [expandedTopic, setExpandedTopic] = useState(null);
   const [topicComments, setTopicComments] = useState({});
+  const [topicLikes, setTopicLikes] = useState({});
+  const [userLikes, setUserLikes] = useState({});
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [toast, setToast] = useState(null);
 
   useEffect(() => {
     const fetchTopicsAndComments = async () => {
       try {
         const topicsResponse = await topicService.getTopics();
         const topicsList = topicsResponse.data;
-        setTopics(topicsList);
+
+        // Ordina i topic in ordine discendente (più recenti prima)
+        const sortedTopics = topicsList.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+        );
+
+        setTopics(sortedTopics);
 
         // Carica i commenti per ogni topic
         const allComments = {};
@@ -39,8 +54,44 @@ export default function TopicsPage() {
         setLoading(false);
       }
     };
-    fetchTopicsAndComments();
-  }, []);
+
+    if (isAuthenticated) {
+      fetchTopicsAndComments();
+    } else {
+      setLoading(false);
+    }
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    const fetchLikes = async () => {
+      const allLikes = {};
+      const userLikesData = {};
+      for (const topic of topics) {
+        try {
+          const likesResponse = await likeService.getLikes(topic.id);
+          allLikes[topic.id] = likesResponse.likeCount || 0;
+
+          // Carica se l'utente ha messo like
+          try {
+            const checkResponse = await likeService.checkUserLike(topic.id);
+            userLikesData[topic.id] = checkResponse.liked || false;
+          } catch (error) {
+            userLikesData[topic.id] = false;
+          }
+        } catch (error) {
+          console.error(
+            `Errore caricamento likes per topic ${topic.id}:`,
+            error,
+          );
+          allLikes[topic.id] = 0;
+          userLikesData[topic.id] = false;
+        }
+      }
+      setTopicLikes(allLikes);
+      setUserLikes(userLikesData);
+    };
+    fetchLikes();
+  }, [topics]);
 
   const handleExpandTopic = async (topicId) => {
     if (expandedTopic === topicId) {
@@ -67,15 +118,79 @@ export default function TopicsPage() {
     if (!newTopic.title.trim() || !newTopic.content.trim()) return;
     try {
       const response = await topicService.createTopic(newTopic);
-      setTopics([...topics, response.data]);
+      setTopics([response.data, ...topics]); // Nuovo topic in cima
       setNewTopic({ title: "", content: "" });
+      setToast({
+        message: "Post pubblicato con successo!",
+        type: "success",
+      });
+      setTimeout(() => setToast(null), 3000);
     } catch (error) {
       setError(error);
+      setToast({
+        message: "Errore nella pubblicazione del post",
+        type: "error",
+      });
+      setTimeout(() => setToast(null), 3000);
+    }
+  };
+
+  // Controlla se l'utente ha effettuato il login
+  const handleAuthCheck = async () => {
+    try {
+      await authService.getMe();
+      setIsAuthenticated(true);
+    } catch (error) {
+      // Utente non autenticato - comportamento atteso
+      setIsAuthenticated(false);
+    }
+  };
+
+  // Effettua il controllo all'avvio
+  useEffect(() => {
+    handleAuthCheck();
+  }, []);
+
+  const handleLikeTopic = async (topicId) => {
+    try {
+      // Chiama addLike - il backend fa il toggle automatico
+      await likeService.addLike(topicId);
+
+      // Ricarica il contatore e lo stato per sincronizzare
+      const likesResponse = await likeService.getLikes(topicId);
+      const checkResponse = await likeService.checkUserLike(topicId);
+
+      setTopicLikes({
+        ...topicLikes,
+        [topicId]: likesResponse.likeCount || 0,
+      });
+
+      setUserLikes({
+        ...userLikes,
+        [topicId]: checkResponse.liked || false,
+      });
+    } catch (error) {
+      console.error("Errore nel gestire il like:", error);
     }
   };
 
   return (
     <div className="topics-page min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 p-8">
+      {/* Toast Notification */}
+      {toast && (
+        <div className="toast toast-top toast-center" data-theme="light">
+          {toast.type === "success" && (
+            <div className="alert alert-success">
+              <span>{toast.message}</span>
+            </div>
+          )}
+          {toast.type === "error" && (
+            <div className="alert alert-error">
+              <span>{toast.message}</span>
+            </div>
+          )}
+        </div>
+      )}
       {/* Header */}
       <div className="max-w-4xl mx-auto mb-12">
         <h1 className="text-4xl font-bold text-white mb-3">Community Topics</h1>
@@ -84,63 +199,71 @@ export default function TopicsPage() {
           Unisciti alla community di My AnimeWorld!
         </p>
       </div>
-
-      {/* Form di creazione */}
-      <div className="max-w-4xl mx-auto mb-12">
-        <div className="bg-gray-800 border border-gray-700 rounded-lg p-6 shadow-xl">
-          <h3 className="text-2xl font-bold text-white mb-5">
-            Crea un nuovo post
-          </h3>
-
-          <div className="space-y-4">
-            <div>
-              <label
-                htmlFor="newTopic"
-                className="block text-sm font-semibold text-gray-300 mb-2"
-              >
-                Titolo
-              </label>
-              <input
-                type="text"
-                id="newTopic"
-                value={newTopic.title}
-                onChange={(e) =>
-                  setNewTopic({ ...newTopic, title: e.target.value })
-                }
-                placeholder="Es: Quale è il miglior anime di questo anno?"
-                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="newTopicContent"
-                className="block text-sm font-semibold text-gray-300 mb-2"
-              >
-                Contenuto
-              </label>
-              <textarea
-                id="newTopicContent"
-                value={newTopic.content}
-                onChange={(e) =>
-                  setNewTopic({ ...newTopic, content: e.target.value })
-                }
-                placeholder="Scrivi il tuo post qui..."
-                rows="5"
-                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition resize-none"
-              />
-            </div>
-
-            <button
-              onClick={handleAddTopic}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition duration-200 transform hover:scale-105"
-            >
-              Pubblica Post
-            </button>
+      {/*se l'utente non ha effettuato il login*/}
+      {!isAuthenticated && (
+        <div className="max-w-4xl mx-auto mb-12">
+          <div className="text-center bg-yellow-900 border border-yellow-700 text-yellow-200 px-6 py-4 rounded-lg">
+            <p>Effettua il login per partecipare alla discussione 😡</p>
           </div>
         </div>
-      </div>
+      )}
+      {/*se l'utente ha effettuato il login*/}
+      {isAuthenticated && (
+        <div className="max-w-4xl mx-auto mb-12">
+          <div className="bg-gray-800 border border-gray-700 rounded-lg p-6 shadow-xl">
+            <h3 className="text-2xl font-bold text-white mb-5">
+              Crea un nuovo post
+            </h3>
 
+            <div className="space-y-4">
+              <div>
+                <label
+                  htmlFor="newTopic"
+                  className="block text-sm font-semibold text-gray-300 mb-2"
+                >
+                  Titolo
+                </label>
+                <input
+                  type="text"
+                  id="newTopic"
+                  value={newTopic.title}
+                  onChange={(e) =>
+                    setNewTopic({ ...newTopic, title: e.target.value })
+                  }
+                  placeholder="Es: Quale è il miglior anime di questo anno?"
+                  className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="newTopicContent"
+                  className="block text-sm font-semibold text-gray-300 mb-2"
+                >
+                  Contenuto
+                </label>
+                <textarea
+                  id="newTopicContent"
+                  value={newTopic.content}
+                  onChange={(e) =>
+                    setNewTopic({ ...newTopic, content: e.target.value })
+                  }
+                  placeholder="Scrivi il tuo post qui..."
+                  rows="5"
+                  className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition resize-none"
+                />
+              </div>
+
+              <button
+                onClick={handleAddTopic}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition duration-200 transform hover:scale-105"
+              >
+                Pubblica Post
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {/* Lista dei topics */}
       <div className="max-w-4xl mx-auto">
         {loading ? (
@@ -148,14 +271,8 @@ export default function TopicsPage() {
             <p className="text-gray-400 text-lg">Caricamento...</p>
           </div>
         ) : error ? (
-          <div className="bg-red-900 border border-red-700 text-red-200 px-6 py-4 rounded-lg">
+          <div className="bg-red-900 border border-red-700 text-red-200 px-6 py-4 rounded-lg ">
             <p>Errore: {error.message}</p>
-          </div>
-        ) : topics.length === 0 ? (
-          <div className="text-center">
-            <p className="text-gray-400 text-lg">
-              Nessun post ancora. Sii il primo!
-            </p>
           </div>
         ) : (
           <div className="space-y-5">
@@ -202,11 +319,18 @@ export default function TopicsPage() {
 
                 {/* Azioni */}
                 <div className="flex gap-6 pt-4 border-t border-gray-600">
-                  <button className="flex items-center gap-2 text-gray-400 hover:text-red-400 text-sm font-semibold transition group">
+                  <button
+                    className={`flex items-center gap-2 text-sm font-semibold transition group ${
+                      userLikes[topic.id]
+                        ? "text-red-500 hover:text-red-600"
+                        : "text-gray-400 hover:text-red-400"
+                    }`}
+                    onClick={() => handleLikeTopic(topic.id)}
+                  >
                     <span className="text-lg group-hover:scale-125 transition">
                       ♥
                     </span>
-                    <span>Mi piace</span>
+                    <span>Mi piace ({topicLikes[topic.id] || 0})</span>
                   </button>
                   <button
                     onClick={() => handleExpandTopic(topic.id)}

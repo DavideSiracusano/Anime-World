@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Button,
@@ -12,66 +12,38 @@ import {
   ListItemText,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { authService } from "@/services/api";
+import { useAuth } from "@/context/AuthContext";
 
 function Navbar() {
   const router = useRouter();
+  const { user, logout, loading } = useAuth();
   const [open, setOpen] = useState(false);
-  const [user, setUser] = useState(null);
-  const [mounted, setMounted] = useState(false);
 
   const handleLogout = async () => {
     try {
-      await authService.logout();
-      setUser(null);
+      await logout();
       router.push("/");
     } catch (error) {
       console.error("Logout failed:", error);
     }
   };
 
-  useEffect(() => {
-    setMounted(true);
-
-    const checkAuthStatus = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/api/auth/me", {
-          credentials: "include",
-        });
-        if (response.ok) {
-          const data = await response.json();
-          setUser(data.user);
-        } else {
-          setUser(null);
-        }
-      } catch (error) {
-        setUser(null);
-      }
-    };
-
-    checkAuthStatus();
-  }, []);
-
   const links = [
     { name: "Home", href: "/" },
     { name: "MyAnimeList", href: "/my-list" },
     { name: "AnimeFinder", href: "/anime/finder" },
     { name: "Topics", href: "/topics" },
-    ...(mounted
+    ...(!user
       ? [
-          !user ? { name: "Login", href: "/login" } : null,
-          !user ? { name: "Signup", href: "/signup" } : null,
-          user
-            ? {
-                name: `Logout (${user.name})`,
-                href: "#",
-                onClick: handleLogout,
-              }
-            : null,
-        ]
-      : [
           { name: "Login", href: "/login" },
           { name: "Signup", href: "/signup" },
+        ]
+      : [
+          {
+            name: `Logout (${user.name})`,
+            href: "#",
+            onClick: handleLogout,
+          },
         ]),
     { name: "About", href: "/about" },
   ].filter(Boolean);
@@ -85,7 +57,9 @@ function Navbar() {
       <header className="bg-gray-900 sticky top-0 z-50 shadow-lg">
         <div className="p-4 sm:p-6 bg-[url('/header.png')] bg-cover bg-[center_25%] bg-blend-darken bg-black/50 w-full shadow-2xl">
           <div className="flex justify-between items-center">
-            {user ? (
+            {loading ? (
+              <div className="invisible" />
+            ) : user ? (
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
                 Ciao, {user.name}!
               </h1>
@@ -130,7 +104,6 @@ function Navbar() {
         </div>
       </header>
 
-      {/* ✅ Drawer MUI rimane, ha senso usarlo */}
       <Drawer anchor="left" open={open} onClose={toggleDrawer(false)}>
         <div className="flex justify-end p-2 bg-gray-900">
           <Button
