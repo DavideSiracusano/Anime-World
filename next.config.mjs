@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  turbopack: {
+    resolveAlias: {},
+  },
   webpack: (config, { isServer }) => {
     config.watchOptions = {
       ignored: /backend/,
