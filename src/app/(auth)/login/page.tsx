@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { authService } from "@/services/api";
 
 interface LoginErrors {
@@ -60,66 +61,80 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-900 via-indigo-900 to-gray-900 text-white p-4">
-      <div className="max-w-md w-full relative">
-        <div className="bg-gray-800/90 backdrop-blur-sm p-8 rounded-lg shadow-2xl border border-gray-700 relative">
-          <h1 className="text-3xl font-bold mb-6 text-center">Login</h1>
+      <div className="flex gap-8 items-center max-w-6xl w-full flex-col md:flex-row">
+        <div className="hidden md:block flex-1">
+          <Image
+            src="/loginAnime.png"
+            alt="Login anime character"
+            width={400}
+            height={500}
+            className="w-full h-auto rounded-lg shadow-2xl"
+            priority
+          />
+        </div>
+        <div className="max-w-md w-full relative">
+          <div className="bg-gray-800/90 backdrop-blur-sm p-8 rounded-lg shadow-2xl border border-gray-700 relative">
+            <h1 className="text-3xl font-bold mb-6 text-center">Login</h1>
 
-          {success && (
-            <div className="alert alert-success mb-4">
-              <span>Accesso riuscito! Reindirizzamento...</span>
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-gray-700 border border-gray-600 rounded-md p-2 text-white outline-none focus:ring-2 focus:ring-purple-500"
-                placeholder="Inserisci la tua email"
-              />
-              {errors.email && (
-                <p className="text-red-400 text-sm mt-1">{errors.email}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-1">Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-gray-700 border border-gray-600 rounded-md p-2 text-white outline-none focus:ring-2 focus:ring-purple-500"
-                placeholder="Inserisci la tua password"
-              />
-              {errors.password && (
-                <p className="text-red-400 text-sm mt-1">{errors.password}</p>
-              )}
-            </div>
-
-            {errors.submit && (
-              <div className="alert alert-error">
-                <span>{errors.submit}</span>
+            {success && (
+              <div className="alert alert-success mb-4">
+                <span>Accesso riuscito! Reindirizzamento...</span>
               </div>
             )}
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 rounded-lg disabled:bg-gray-500"
-            >
-              {loading ? "Caricamento..." : "Accedi"}
-            </button>
-          </form>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">Email</label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full bg-gray-700 border border-gray-600 rounded-md p-2 text-white outline-none focus:ring-2 focus:ring-purple-500"
+                  placeholder="Inserisci la tua email"
+                />
+                {errors.email && (
+                  <p className="text-red-400 text-sm mt-1">{errors.email}</p>
+                )}
+              </div>
 
-          <p className="text-center mt-4 text-gray-300">
-            Non hai un account?{" "}
-            <a href="/signup" className="text-pink-400 hover:underline">
-              Registrati
-            </a>
-          </p>
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full bg-gray-700 border border-gray-600 rounded-md p-2 text-white outline-none focus:ring-2 focus:ring-purple-500"
+                  placeholder="Inserisci la tua password"
+                />
+                {errors.password && (
+                  <p className="text-red-400 text-sm mt-1">{errors.password}</p>
+                )}
+              </div>
+
+              {errors.submit && (
+                <div className="alert alert-error">
+                  <span>{errors.submit}</span>
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 rounded-lg disabled:bg-gray-500"
+              >
+                {loading ? "Caricamento..." : "Accedi"}
+              </button>
+            </form>
+
+            <p className="text-center mt-4 text-gray-300">
+              Non hai un account?{" "}
+              <a href="/signup" className="text-pink-400 hover:underline">
+                Registrati
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </div>
