@@ -1,4 +1,3 @@
-import React from "react";
 import FetchNews from "@/components/organisms/FetchNews";
 
 export const metadata = {
