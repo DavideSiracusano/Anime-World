@@ -62,26 +62,26 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-900 via-indigo-900 to-gray-900 text-white p-4">
       <div className="relative w-full max-w-md">
-        {/* Immagine che si appoggia sopra - Mobile */}
-        <div className="md:hidden absolute  left-31 bottom-64 z-20">
+        {/* Immagine responsive che si appoggia sopra il form - Mobile */}
+        <div className="md:hidden absolute left-34 -top-15 z-20 pointer-events-none">
           <Image
             src="/loginAnime.png"
             alt="Login anime character"
-            width={240}
-            height={260}
-            className="drop-shadow-2xl"
+            width={200}
+            height={150}
+            className="drop-shadow-2xl w-40 h-auto"
             priority
           />
         </div>
 
-        {/* Immagine che si appoggia sopra - Desktop */}
-        <div className="hidden md:block absolute  left-45 bottom-62 z-20">
+        {/* Immagine responsive che si appoggia sopra il form - Desktop */}
+        <div className="hidden md:block absolute left-40 -top-25 z-20 pointer-events-none">
           <Image
             src="/loginAnime.png"
             alt="Login anime character"
-            width={220}
-            height={240}
-            className="drop-shadow-2xl"
+            width={240}
+            height={200}
+            className="drop-shadow-2xl w-56 h-auto"
             priority
           />
         </div>
@@ -146,18 +146,6 @@ export default function LoginPage() {
               Registrati
             </a>
           </p>
-        </div>
-
-        {/* Immagine per mobile - piccola sotto il form */}
-        <div className="md:hidden w-full max-w-xs mx-auto">
-          <Image
-            src="/loginAnime.png"
-            alt="Login anime character"
-            width={250}
-            height={320}
-            className="w-full h-auto rounded-2xl shadow-lg object-cover"
-            priority
-          />
         </div>
       </div>
     </div>
