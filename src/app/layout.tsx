@@ -1,10 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/Header/Header";
-import Navbar from "@/components/Navbar/Navbar";
-import Main from "@/components/Main/Main";
-import Footer from "@/components/Footer/Footer";
-import { AuthProviderClient } from "@/context/AuthProviderClient";
+import { RootClientLayout } from "./RootClientLayout";
 import { ReactNode } from "react";
 
 const geistSans = Geist({
@@ -23,8 +19,6 @@ export const metadata = {
     "Scopri i migliori anime del momento. Ricerca, salva e gestisci i tuoi anime preferiti in un'unica piattaforma.",
 };
 
-export const dynamic = "force-dynamic";
-
 interface RootLayoutProps {
   children: ReactNode;
 }
@@ -35,15 +29,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProviderClient>
-          <Header>
-            <Navbar />
-          </Header>
-
-          <Main>{children}</Main>
-
-          <Footer />
-        </AuthProviderClient>
+        <RootClientLayout className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+          {children}
+        </RootClientLayout>
       </body>
     </html>
   );
