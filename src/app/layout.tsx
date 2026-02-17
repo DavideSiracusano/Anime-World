@@ -23,6 +23,8 @@ export const metadata = {
     "Scopri i migliori anime del momento. Ricerca, salva e gestisci i tuoi anime preferiti in un'unica piattaforma.",
 };
 
+export const dynamic = "force-dynamic";
+
 interface RootLayoutProps {
   children: ReactNode;
 }
