@@ -29,7 +29,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <RootClientLayout className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <RootClientLayout
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
           {children}
         </RootClientLayout>
       </body>
