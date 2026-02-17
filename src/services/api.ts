@@ -4,11 +4,6 @@ interface ApiCallOptions extends RequestInit {
   headers?: Record<string, string>;
 }
 
-interface ApiResponse<T = any> {
-  success: boolean;
-  [key: string]: any;
-}
-
 async function apiCall<T = any>(
   endpoint: string,
   options: ApiCallOptions = {},
