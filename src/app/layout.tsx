@@ -4,7 +4,7 @@ import Header from "@/components/Header/Header";
 import Navbar from "@/components/Navbar/Navbar";
 import Main from "@/components/Main/Main";
 import Footer from "@/components/Footer/Footer";
-import { AuthProvider } from "@/context/AuthContext";
+import { AuthProviderClient } from "@/context/AuthProviderClient";
 import { ReactNode } from "react";
 
 const geistSans = Geist({
@@ -33,7 +33,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider>
+        <AuthProviderClient>
           <Header>
             <Navbar />
           </Header>
@@ -41,7 +41,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <Main>{children}</Main>
 
           <Footer />
-        </AuthProvider>
+        </AuthProviderClient>
       </body>
     </html>
   );
