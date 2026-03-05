@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import CardAnime from "@/components/molecules/CardAnime";
 import SearchAnime from "@/components/organisms/SearchAnime";
@@ -113,6 +113,10 @@ export default function AnimeList() {
     router.push(`/anime/${card.mal_id}`);
   };
 
+  const handleSearchResults = useCallback((results: CardData[]) => {
+    setSearchResults(results);
+  }, []);
+
   const animeToDisplay = searchResults.length > 0 ? searchResults : favorites;
 
   if (!isAuthenticated && !loading) {
@@ -128,7 +132,7 @@ export default function AnimeList() {
   return (
     <div>
       <h1 className="text-center text-2xl font-bold my-4">La Mia Lista</h1>
-      <SearchAnime onSearchResults={setSearchResults} />
+      <SearchAnime onSearchResults={handleSearchResults} />
 
       {toast && (
         <div

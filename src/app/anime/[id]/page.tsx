@@ -61,13 +61,16 @@ export default function AnimePage() {
       }
     };
     fetchAnime();
-  }, [id]);
+  }, [id, ANIME_API]);
 
   useEffect(() => {
     if (!id) return;
     const fetchNews = async () => {
       setLoadingNews(true);
       try {
+        // Aggiunge delay di 2 secondi per evitare rate limiting
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
         const res = await fetch(NEWS_API);
         if (!res.ok) throw new Error(`Errore fetch news: ${res.status}`);
         const data = await res.json();
@@ -79,7 +82,7 @@ export default function AnimePage() {
       }
     };
     fetchNews();
-  }, [id]);
+  }, [id, NEWS_API]);
 
   if (loadingAnime || loadingNews)
     return <p className="text-center mt-6">Caricamento...</p>;
